@@ -67,6 +67,32 @@ static int num_instances = 0;
 static int total_blocks = 0;
 static mtd_instance_s *instances[MAX_MTD_INSTANCES] = {};
 
+static int w25_attach(mtd_instance_s &instance)
+{
+#if !defined(CONFIG_MTD_W25)
+	PX4_ERR("Misconfiguration CONFIG_MTD_W25 not set");
+	return ENXIO;
+#else
+	/* initialize the right spi */
+	struct spi_dev_s *spi = px4_spibus_initialize(px4_find_spi_bus(instance.devid));
+
+	if (spi == nullptr) {
+		PX4_ERR("failed to locate spi bus");
+		return -ENXIO;
+	}
+
+	instance.mtd_dev = w25_initialize(spi);
+
+	/* if unsuccessful, abort */
+	if (instance.mtd_dev == nullptr) {
+		PX4_ERR("failed to initialize mtd driver");
+		return -EIO;
+	}
+
+	return 0;
+#endif
+}
+
 
 static int ramtron_attach(mtd_instance_s &instance)
 {
@@ -242,7 +268,7 @@ mtd_instance_s **px4_mtd_get_instances(unsigned int *count)
 }
 
 // Define the default FRAM usage
-#if !defined(CONFIG_MTD_RAMTRON)
+#if !defined(CONFIG_MTD_RAMTRON) || !defined(CONFIG_MTD_W25)
 
 static const px4_mtd_manifest_t default_mtd_config = {
 };
@@ -350,7 +376,12 @@ memoryout:
 			rv = at24xxx_attach(*instances[i]);
 
 		} else if (mtd_list->entries[num_entry]->device->bus_type == px4_mft_device_t::SPI) {
+			//Prioritize ramtron when using spi mft
 			rv = ramtron_attach(*instances[i]);
+			if (rv != 0)
+				//Try with w25 if ramtron is not available
+				rv = w25_attach(*instances[i]);
+
 #if defined(HAS_FLEXSPI)
 
 		} else if (mtd_list->entries[num_entry]->device->bus_type == px4_mft_device_t::FLEXSPI) {
