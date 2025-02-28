@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# board specific defaults
+#------------------------------------------------------------------------------
+
+
+# transision from params file to flash-based params (2022-08)
+if [ -f $PARAM_FILE ]
+then
+	param load $PARAM_FILE
+	param save
+	# create a backup
+	mv $PARAM_FILE ${PARAM_FILE}.bak
+	reboot
+fi
+
+#Reading and writing waypoints to external SPI memory
+dataman start -f /fs/mtd_waypoints
+
+# Sik Radio setup, comment out to use Sik port as debug console
+# add the following in nuttx-config/bootloader/defconfig
+# CONFIG_DEV_CONSOLE=y
+# CONFIG_USART6_SERIAL_CONSOLE=y
+#param set-default MAV_0_CONFIG 101   # TELEM1
+#param set-default MAV_0_FORWARD 0    # Disabled
+#param set-default MAV_0_MODE 0       # Normal
+#param set-default MAV_0_RATE 1200    # 1200 B/s
+#param set-default SER_TEL2_BAUD 57600
+
+# Airframe set to quadcopter
+param set-default SYS_AUTOSTART 4001
+
+# Ghost enable and set to Radio Controller
+param set-default RC_GHST_PRT_CFG 300
+param set-default RC_GHST_TEL_EN 1
+
+# Battery params
+param set-default BAT1_V_DIV 9.2931
+param set-default BAT1_A_PER_V 92.6
+param set-default BAT1_N_CELLS 6
+param set-default BAT1_V_LOAD_DROP 0.3

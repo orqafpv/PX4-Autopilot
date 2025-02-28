@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# board specific sensors init
+#------------------------------------------------------------------------------
+
+board_adc start
+
+# Internal SPI bus MPU6000 (SPI1, v1.1 of the H743 3030 only)
+mpu6000 -R 12 -b 1 -s start
+
+# Internal SPI bus ICM-42688 (SPI4)
+icm42688p -R 14 -b 4 -s start
+
+# Internal baro
+dps310 -I start -a 119
+
+# External mag
+qmc5883l -X start -a 13
+
+# GPS (USART7), UBlox mode
+gps start -d /dev/ttyS2 -p ubx
