@@ -301,6 +301,16 @@ CONFIG:
       buildType: MinSizeRel
       settings:
         CONFIG: matek_h743-slim_default
+    orqa_h743-3030-pro_default:
+      short: orqa_h743-3030-pro
+      buildType: MinSizeRel
+      settings:
+        CONFIG: orqa_h743-3030-pro_default
+    orqa_h743-APB_default:
+      short: orqa_h743-APB
+      buildType: MinSizeRel
+      settings:
+        CONFIG: orqa_h743-APB_default-pro_default
     matek_gnss-m9n-f4_canbootloader:
       short: matek_gnss-m9n-f4_canbootloader
       buildType: MiniSizeRel
