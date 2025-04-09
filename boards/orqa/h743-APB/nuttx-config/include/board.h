@@ -354,9 +354,15 @@
 #define GPIO_USART3_RX   GPIO_USART3_RX_3   /* PD9  */
 #define GPIO_USART3_TX   GPIO_USART3_TX_3   /* PD8  */
 
+/*IMX*/
+#define GPIO_UART4_RX  GPIO_UART4_RX_4      /* PC11*/
+#define GPIO_UART4_TX  GPIO_UART4_TX_4      /* PC10*/
+
+
 /*SIK, Gimbal*/
 #define GPIO_USART6_RX   GPIO_USART6_RX_1   /* PC7  */
 #define GPIO_USART6_TX   GPIO_USART6_TX_1   /* PC6  */
+
 
 /*GPS*/
 #define GPIO_UART7_RX    GPIO_UART7_RX_3    /* PE7  */

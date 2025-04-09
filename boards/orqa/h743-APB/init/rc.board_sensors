@@ -23,3 +23,6 @@ dps310 -I start -a 119
 
 # External mag
 qmc5883l -X start -a 13
+
+# GPS (USART7), UBlox mode
+gps start -d /dev/ttyS3 -p ubx

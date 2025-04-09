@@ -121,6 +121,9 @@ __EXPORT void stm32_boardinitialize(void)
 	const uint32_t gpio[] = PX4_GPIO_INIT_LIST;
 	px4_gpio_init(gpio, arraySize(gpio));
 
+	stm32_configgpio(GPIO_UART4_TX);
+	stm32_configgpio(GPIO_UART4_RX);
+
 	/* configure SPI interfaces */
 	stm32_spiinitialize();
 
